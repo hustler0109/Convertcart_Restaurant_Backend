@@ -1,0 +1,76 @@
+﻿{
+  "info": {
+    "_postman_id": "final-collection",
+    "name": "Restaurant Search API (Final)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Search Dish - SUCCESS",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "if (!pm.environment.get('base_url')) pm.environment.set('base_url','http://localhost:3000');",
+              "if (!pm.environment.get('dish')) pm.environment.set('dish','biryani');",
+              "if (!pm.environment.get('minPrice')) pm.environment.set('minPrice','100');",
+              "if (!pm.environment.get('maxPrice')) pm.environment.set('maxPrice','300');"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', ()=> pm.response.to.have.status(200));",
+              "pm.test('Response is JSON', ()=> pm.response.to.be.json);",
+              "const data = pm.response.json();",
+              "pm.test('restaurants exists', ()=> pm.expect(data).to.have.property('restaurants'));",
+              "const schema = {\"type\":\"object\",\"required\":[\"restaurants\"],\"properties\":{\"restaurants\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"required\":[\"restaurantId\",\"restaurantName\",\"city\",\"dishName\",\"dishPrice\",\"orderCount\"],\"properties\":{\"restaurantId\":{\"type\":\"integer\"},\"restaurantName\":{\"type\":\"string\"},\"city\":{\"type\":\"string\"},\"dishName\":{\"type\":\"string\"},\"dishPrice\":{\"type\":\"integer\"},\"orderCount\":{\"type\":\"integer\",\"minimum\":0}}}}}};",
+              "const valid = tv4.validate(data, schema);",
+              "pm.test('schema valid', ()=> pm.expect(valid).to.be.true);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/search/dishes?name={{dish}}&minPrice={{minPrice}}&maxPrice={{maxPrice}}",
+          "host": ["{{base_url}}"],
+          "path": ["search", "dishes"],
+          "query": [
+            { "key": "name", "value": "{{dish}}" },
+            { "key": "minPrice", "value": "{{minPrice}}" },
+            { "key": "maxPrice", "value": "{{maxPrice}}" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Search Dish - MISSING PARAMS",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('should be 400', ()=> pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/search/dishes?name={{dish}}",
+          "host": ["{{base_url}}"],
+          "path": ["search", "dishes"],
+          "query": [
+            { "key": "name", "value": "{{dish}}" }
+          ]
+        }
+      }
+    }
+  ]
+}

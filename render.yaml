@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: restaurant-api
+    env: docker
+    plan: free
+    autoDeploy: true
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000

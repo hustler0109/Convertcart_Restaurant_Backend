@@ -1,0 +1,60 @@
+﻿# version: '3.8'
+# services:
+#   db:
+#     image: mysql:8.0
+#     environment:
+#       MYSQL_ROOT_PASSWORD: rootpassword
+#       MYSQL_DATABASE: restaurant_db
+#     ports:
+#       - '3306:3306'
+#     volumes:
+#       - db_data:/var/lib/mysql
+#       - ./schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+#       - ./seed.sql:/docker-entrypoint-initdb.d/02-seed.sql
+#   app:
+#     build: .
+#     depends_on:
+#       - db
+#     environment:
+#       DB_HOST: db
+#       DB_USER: root
+#       DB_PASS: rootpassword
+#       DB_NAME: restaurant_db
+#       PORT: 3000
+#     ports:
+#       - '3000:3000'
+# volumes:
+#   db_data:
+
+version: "3.8"
+
+services:
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: restaurant_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./seed.sql:/docker-entrypoint-initdb.d/02-seed.sql
+
+  app:
+    build: .
+    restart: always
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASS: rootpassword
+      DB_NAME: restaurant_db
+      PORT: 3000
+    ports:
+      - "3000:3000"
+
+volumes:
+  db_data:
