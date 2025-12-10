@@ -1,4 +1,4 @@
-import { pool } from './db.js';
+import { pool } from '../db.js';
 import fs from 'fs';
 
 export const initDb = async () => {

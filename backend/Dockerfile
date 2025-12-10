@@ -1,30 +1,20 @@
-﻿# FROM node:18-alpine
-# WORKDIR /usr/src/app
-# COPY backend/package.json ./backend/package.json
-# WORKDIR /usr/src/app/backend
-# RUN npm ci --only=production
-# WORKDIR /usr/src/app
-# COPY . .
-# EXPOSE 3000
-# CMD [""node"", ""backend/index.js""]
+﻿FROM node:18-alpine
 
-# Use official Node runtime
-FROM node:18-alpine
-
-# Set work directory
 WORKDIR /app
 
-# Copy package files first (better caching)
 COPY package*.json ./
 
-# Install dependencies
 RUN npm install --production
 
-# Copy backend source code
 COPY . .
 
-# Expose port (Render sets PORT dynamically)
-EXPOSE 3000
+ENV NODE_ENV=production
 
-# Start the Node server
+# IMPORTANT: Tell Node to load Railway environment variables
+ENV DB_HOST=${DB_HOST}
+ENV DB_PORT=${DB_PORT}
+ENV DB_USER=${DB_USER}
+ENV DB_PASS=${DB_PASS}
+ENV DB_NAME=${DB_NAME}
+
 CMD ["node", "index.js"]

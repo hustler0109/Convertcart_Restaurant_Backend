@@ -2,13 +2,18 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
+console.log("🔍 Loaded ENV:", {
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  pass: process.env.DB_PASS,
+  name: process.env.DB_NAME,
+  port: process.env.DB_PORT
+});
+
 export const pool = mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME,
-    port: process.env.DB_PORT,   // ← VERY IMPORTANT
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT,
 });
