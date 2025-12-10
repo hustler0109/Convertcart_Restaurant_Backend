@@ -1,7 +1,7 @@
 ﻿import app from './src/app.js';
-import dotenv from 'dotenv';
+import { initDb } from './src/initDb.js';
 
-dotenv.config();
+initDb();  // ← IMPORTANT
 
 const PORT = process.env.PORT || 3000;
 
