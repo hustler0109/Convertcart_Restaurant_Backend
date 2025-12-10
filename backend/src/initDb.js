@@ -1,15 +1,17 @@
-import { pool } from '../db.js';
-import fs from 'fs';
+import { pool } from "../db.js";
+import fs from "fs";
+import path from "path";
 
-export const initDb = async () => {
-    const schema = fs.readFileSync('./schema.sql').toString();
-    const seed = fs.readFileSync('./seed.sql').toString();
+export async function initDb() {
+  try {
+    const schema = fs.readFileSync(path.resolve("schema.sql"), "utf8");
+    const seed = fs.readFileSync(path.resolve("seed.sql"), "utf8");
 
-    try {
-        await pool.query(schema);
-        await pool.query(seed);
-        console.log('✅ Database initialized');
-    } catch (err) {
-        console.error('❌ DB Init Error:', err);
-    }
-};
+    await pool.query(schema);
+    await pool.query(seed);
+
+    console.log("✅ Database initialized");
+  } catch (error) {
+    console.error("❌ DB Init Error:", error);
+  }
+}
